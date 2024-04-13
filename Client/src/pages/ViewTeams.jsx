@@ -7,7 +7,7 @@ const ViewTeams = () => {
     const fetchTeams = async () => {
         const res = await fetch("http://localhost:3000/api/team");
         const data = await res.json();
-        console.log(data);
+        console.log("These are the number of teams",data);
         setTeams(data);
         
     }
@@ -18,12 +18,12 @@ const ViewTeams = () => {
       <h1 className="text-4xl font-semibold p-3 text-slate-700 border-b mt-5">
         List of Teams
       </h1>
-      <div className="flex items-center justify-around flex-wrap p-5 m-2">
+      <div className="flex items-center justify-around flex-wrap p-5 m-2 w-2/3">
         {teams.map((team) => (
           <Link
             to={`/team/${team._id}`}
             key={team._id}
-            className="relative flex flex-col gap-5 m-3 p-5 shadow-xl rounded-md w-1/4 bg-slate-400 hover:bg-slate-200 delay-50 duration-150 hover:scale-105"
+            className="relative flex flex-col gap-5 m-3 p-5 shadow-xl rounded-md md:w-1/4 bg-slate-400 hover:bg-slate-200 delay-50 duration-150 hover:scale-105 w-1/2"
           >
             <div key={team._id} >
               <h1 className="text-2xl font-semibold">{team.name}</h1>

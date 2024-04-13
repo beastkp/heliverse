@@ -1,10 +1,13 @@
 import React from "react";
-import {useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
+import { useSelector,useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setCreateTeam } from "../redux/team/teamSlice";
 
 const Team = () => {
-    const Navigate = useNavigate();
-    const {members} = useSelector((state) => state.member);
+  const Navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { members } = useSelector((state) => state.member);
+  const {createTeam} = useSelector((state) => state.team);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const teamName = document.getElementById("teamName").value;
@@ -18,12 +21,13 @@ const Team = () => {
       },
       body: JSON.stringify({
         name: teamName,
-        members: members
+        members: members,
       }),
-    })
+    });
     const data = await res.json();
+    dispatch(setCreateTeam())
     console.log(data);
-    Navigate(`/viewTeams`)
+    Navigate(`/viewTeams`);
   };
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden">
