@@ -14,16 +14,15 @@ const Userlisting = ({ user }) => {
   };
   return (
     <div
-      className={`flex items-center flex-col gap-2 shadow-xl p-3 m-3 rounded-lg transition duration-300 hover:scale-110 w-50 delay-50 card ${
+      className={`flex items-center flex-col gap-2 shadow-xl p-3 m-3 rounded-lg transition duration-300 hover:scale-110 w-50 delay-50 ${
         members.includes(user._id) ? `dark:bg-gray-500` : ""
       }`}
-      id="card"
     >
       <div className="p-5">
         <img
           src={user.avatar}
           alt="No Image Available"
-          className="w-20 transition duration-300 hover:scale-125 bg-slate-200 rounded-full "
+          className="w-20 h-20 transition duration-300 hover:scale-125 bg-slate-200 rounded-full "
         />
       </div>
       <div className="flex flex-col gap-2 text-center p-3 m-3">
