@@ -10,7 +10,9 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 const Filters = () => {
   const Navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [showRight, setShowRight] = useState(true);
+  const [showLeft, setShowLeft] = useState(false);
+  const [noresult, setNoResult] = useState(false);
   const { domain, gender, available } = useSelector((state) => state.user);
   const { createTeam } = useSelector((state) => state.team);
   const { cards } = useSelector((state) => state.card);
@@ -35,21 +37,35 @@ const Filters = () => {
       try {
         const searchQuery = urlParams.toString();
         console.log(urlParams);
-        const res = await fetch(
-          `http://localhost:3000/api/query/users?${searchQuery}&page=${page}`
-        );
-        const data = await res.json();
-        if (data.length === 0) {
-          setPage(page - 1);
+        if (page >= 1) {
+          const res = await fetch(
+            `http://localhost:3000/api/query/users?${searchQuery}&page=${page}`
+          );
+          const data = await res.json();
+          if (data.length === 0) {
+            setNoResult(true);
+            setPage(page - 1);
+            setShowRight(false);
+          }
+          dispatch(setCards(data));
+          console.log(data);
         }
-        dispatch(setCards(data));
-        console.log(data);
       } catch (error) {
         console.log(error);
       }
     };
     fetchUsers();
   }, [location.search, page]);
+
+  useEffect(() => {
+    if (page > 1) {
+      setShowLeft(true);
+    }
+    else{
+      setShowLeft(false);
+      setShowRight(true);
+    }
+  }, [page]);
 
   const handleChange = (e) => {
     if (e.target.id === "domainChange") {
@@ -88,18 +104,16 @@ const Filters = () => {
   };
 
   const handleLeft = () => {
-    if (count === 1) {
-      return;
-    } else {
-      setCount(count - 1);
-      setPage(count - 1);
+    if (page > 1) {
+      setShowLeft(true);
     }
+    setCount((prevCount) => prevCount - 1);
+    setPage((prevCount) => prevCount - 1);
   };
 
   const handleRight = () => {
-    setCount(count + 1);
-    setPage(count + 1);
-    console.log(count + 1);
+    setCount((prevCount) => prevCount + 1);
+    setPage((prevCount) => prevCount + 1);
   };
   return (
     <div className="flex flex-col md:flex-row gap-3 p-5 pl-0">
@@ -162,7 +176,6 @@ const Filters = () => {
             Search
           </button>
         </form>
-
         <div className="p-4">
           <button
             className="bg-slate-700 text-white p-3 rounded-lg hover:opacity-50 active:opacity-70 w-full"
@@ -172,24 +185,32 @@ const Filters = () => {
           </button>
         </div>
       </div>
+      {}
       <div>
+        {!noresult &&
         <h1 className="text-3xl font-semibold p-3 text-slate-700 border-b mt-5">
           List of Users:{" "}
         </h1>
+        
+        }
         <div className="flex justify-center items-center">
-          <FaArrowLeft
-            className="text-3xl mx-auto hover:cursor-pointer"
-            onClick={handleLeft}
-          />
+          {showLeft && (
+            <FaArrowLeft
+              className="text-3xl mx-auto hover:cursor-pointer"
+              onClick={handleLeft}
+            />
+          )}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 p-2 m-2">
             {cards.map((card) => (
               <Userlisting key={card._id} user={card} />
             ))}
           </div>
-          <FaArrowRight
-            className="text-3xl mx-auto hover:cursor-pointer"
-            onClick={handleRight}
-          />
+          {showRight && (
+            <FaArrowRight
+              className="text-3xl mx-auto hover:cursor-pointer"
+              onClick={handleRight}
+            />
+          )}
         </div>
       </div>
       <div>
@@ -202,6 +223,12 @@ const Filters = () => {
           </button>
         )}
       </div>
+
+      {noresult && (
+        <div>
+          <p className="text-xl text-slate-700">No listing found!</p>
+        </div>
+      )}
     </div>
   );
 };
