@@ -1,8 +1,8 @@
 const User = require("../models/User");
 
 const getUsers = async (req, res) => {
-  const page = parseInt(req.query.page) | 1;
-  const pageSize = parseInt(req.query.pageSize) || 10;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 12;
   try {
     const userList = await User.find()
       .sort({ id: 1 })
@@ -29,7 +29,13 @@ const createUser = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    res.status(200).json(user);
+    if(!user){
+      res.status(404).json({message: "User not found"});
+    }
+    else{
+      res.status(200).json(user);
+    }
+
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });

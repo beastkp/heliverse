@@ -31,4 +31,26 @@ const getAllTeams = async (req, res) => {
     }
 }
 
-module.exports = {createTeam,getTeam,getAllTeams};
+const updateTeam = async (req, res) => {
+    try {
+        const updatedTeam = await Team.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        });
+        res.status(200).json(updatedTeam);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const deleteTeam = async (req, res) => {
+    try {
+        const deletedTeam = await Team.findByIdAndDelete(req.params.id);
+        res.status(200).json(deletedTeam);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
+module.exports = {createTeam,getTeam,getAllTeams, updateTeam, deleteTeam};
