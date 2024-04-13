@@ -13,7 +13,6 @@ const app = express();
 app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
-
 app.use("/api/users",userRouter);
 app.use("/api/query/users",filterRouter);
 app.use('/api/team',teamRouter)

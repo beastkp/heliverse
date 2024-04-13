@@ -5,7 +5,15 @@ const filterUsers = async (req, res) => {
   page = parseInt(req.query.page) | 1;
   pageSize = parseInt(req.query.pageSize) || 12;
   try {
-    const users = await User.find(rest)
+    const lowercaseRest = Object.keys(rest).reduce((acc, key) => {
+      if (key === "first_name") {
+        acc[key] = { $regex: new RegExp(rest[key], "i") }; // Case-insensitive regex
+      } else {
+        acc[key] = rest[key];
+      }
+      return acc;
+    }, {});
+    const users = await User.find(lowercaseRest)
       .skip((page - 1) * pageSize)
       .limit(pageSize);
     res.status(200).json(users);
@@ -14,5 +22,4 @@ const filterUsers = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 module.exports = { filterUsers };
