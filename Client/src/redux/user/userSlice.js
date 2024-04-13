@@ -17,7 +17,7 @@ const userSlice = createSlice({
       state.gender = action.payload;
     },
     setAvailable: (state) => {
-      state.available = true;
+      state.available = !state.available;
     },
   },
 });
